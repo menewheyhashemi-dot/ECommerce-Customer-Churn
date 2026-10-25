@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-commerce Customer Churn Dashboard</title>
+
+  <!-- Page styles (relative path) -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <!-- Page title -->
+    <h1>E-commerce Customer Churn</h1>
+
+    <!-- Chart section -->
+    <section class="card">
+      <h2>Churn Rate by Preferred Order Category</h2>
+      <div class="chart-wrapper">
+        <canvas id="churnChart"></canvas>
+      </div>
+    </section>
+
+    <!-- Data table section -->
+    <section class="card">
+      <h2>Customer Data</h2>
+
+      <!-- Search box: filters the table while typing -->
+      <input
+        type="search"
+        id="searchBox"
+        placeholder="Search any value (e.g. Laptop, Single, 5)..."
+        aria-label="Search customers">
+      <p id="rowCount" class="row-count"></p>
+
+      <!-- table.js puts the table inside this container -->
+      <div id="tableContainer" class="table-container"></div>
+    </section>
+  </main>
+
+  <!-- Scripts are loaded in this order -->
+  <script src="data.js"></script>   <!-- defines the global "data" array -->
+  <script src="table.js"></script>  <!-- builds and filters the table -->
+
+  <!-- Chart.js library from the jsDelivr CDN (must load before charts.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="charts.js"></script> <!-- draws the bar chart -->
+</body>
+</html>
