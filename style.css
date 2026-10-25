@@ -1,0 +1,129 @@
+/* ---------- Basic reset and page setup ---------- */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f1f5f9;
+  color: #1e293b;
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+
+/* ---------- Card layout used for each section ---------- */
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+/* ---------- Search box ---------- */
+#searchBox {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#searchBox:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+.row-count {
+  margin: 8px 0 12px;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+/* ---------- Table ---------- */
+/* The container scrolls (vertically and sideways) when the table is big */
+.table-container {
+  max-height: 480px;
+  overflow: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th, td {
+  padding: 10px 12px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* Header stays visible while scrolling */
+th {
+  position: sticky;
+  top: 0;
+  background: #1e40af;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+tbody tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+tbody tr:hover {
+  background: #e0f2fe;
+}
+
+.no-results {
+  padding: 20px;
+  text-align: center;
+  color: #64748b;
+}
+
+/* ---------- Chart ---------- */
+.chart-wrapper {
+  position: relative;
+  height: 360px;
+}
+
+/* ---------- Responsive adjustments for small screens ---------- */
+@media (max-width: 600px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .chart-wrapper {
+    height: 280px;
+  }
+
+  th, td {
+    padding: 8px;
+    font-size: 0.8rem;
+  }
+}
