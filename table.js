@@ -3,8 +3,18 @@ const tableContainer = document.getElementById("tableContainer");
 const searchBox = document.getElementById("searchBox");
 const rowCount = document.getElementById("rowCount");
 
-// ---------- Column names are taken from the keys of the first object ----------
-const columns = data.length > 0 ? Object.keys(data[0]) : [];
+// ---------- The exact 8 columns shown in the table (and used by the search) ----------
+// Any other keys that may exist in data.js are ignored.
+const columns = [
+  "Tenure",
+  "WarehouseToHome",
+  "PreferedOrderCat",
+  "SatisfactionScore",
+  "Complain",
+  "DaySinceLastOrder",
+  "CashBankAmount",
+  "Churn"
+];
 
 // ---------- Build the table for a given list of rows ----------
 function renderTable(rows) {
@@ -62,7 +72,7 @@ function filterRows() {
     return;
   }
 
-  // Keep a row if ANY of its values contains the search text
+  // Keep a row if ANY of the 8 displayed columns contains the search text
   const filtered = data.filter(function (row) {
     return columns.some(function (column) {
       return String(row[column]).toLowerCase().includes(query);
