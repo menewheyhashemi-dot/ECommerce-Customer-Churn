@@ -737,3 +737,94 @@ tbody tr:hover {
     animation: none;
   }
 }
+/* =========================================
+   WHITE & BLUE NEON TOP WAVES
+========================================= */
+
+.header {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+}
+
+/* First wave */
+.header::before {
+  content: "";
+  position: absolute;
+  top: -100px;
+  left: -15%;
+  width: 130%;
+  height: 230px;
+
+  background:
+    radial-gradient(
+      ellipse at 30% 50%,
+      rgba(255, 255, 255, 0.17),
+      transparent 65%
+    ),
+    radial-gradient(
+      ellipse at 70% 40%,
+      rgba(59, 130, 246, 0.22),
+      transparent 65%
+    );
+
+  border-radius: 50%;
+  filter: blur(28px);
+
+  animation: topWaveOne 9s ease-in-out infinite alternate;
+
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Second wave */
+.header::after {
+  content: "";
+  position: absolute;
+  top: -145px;
+  left: -20%;
+  width: 140%;
+  height: 250px;
+
+  background:
+    radial-gradient(
+      ellipse at 65% 70%,
+      rgba(255, 255, 255, 0.13),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse at 25% 50%,
+      rgba(34, 211, 230, 0.17),
+      transparent 65%
+    );
+
+  border-radius: 50%;
+  filter: blur(35px);
+
+  animation: topWaveTwo 12s ease-in-out infinite alternate;
+
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Wave movements */
+
+@keyframes topWaveOne {
+  0% {
+    transform: translateX(-4%) translateY(0) scaleY(0.9);
+  }
+
+  100% {
+    transform: translateX(5%) translateY(35px) scaleY(1.2);
+  }
+}
+
+@keyframes topWaveTwo {
+  0% {
+    transform: translateX(5%) translateY(25px) scaleY(1.1);
+  }
+
+  100% {
+    transform: translateX(-5%) translateY(-15px) scaleY(0.85);
+  }
+}
