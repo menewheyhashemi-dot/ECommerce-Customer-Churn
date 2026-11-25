@@ -5,11 +5,9 @@
 function isChurned(row) {
   const value = String(row.Churn).trim().toLowerCase();
 
-  return (
-    value === "1" ||
-    value === "true" ||
-    value === "yes"
-  );
+  return value === "1" ||
+         value === "true" ||
+         value === "yes";
 }
 
 
@@ -20,15 +18,14 @@ function isChurned(row) {
 const totalCustomers = data.length;
 
 const churnedCustomers = data.filter(isChurned).length;
-
 const retainedCustomers = totalCustomers - churnedCustomers;
 
 const churnRate = totalCustomers > 0
-  ? (churnedCustomers / totalCustomers) * 100
+  ? churnedCustomers / totalCustomers * 100
   : 0;
 
 const retentionRate = totalCustomers > 0
-  ? (retainedCustomers / totalCustomers) * 100
+  ? retainedCustomers / totalCustomers * 100
   : 0;
 
 const cashbackValues = data
@@ -36,7 +33,8 @@ const cashbackValues = data
   .filter(value => Number.isFinite(value));
 
 const averageCashback = cashbackValues.length > 0
-  ? cashbackValues.reduce((sum, value) => sum + value, 0) / cashbackValues.length
+  ? cashbackValues.reduce((sum, value) => sum + value, 0) /
+    cashbackValues.length
   : null;
 
 
@@ -65,9 +63,9 @@ document.getElementById("averageCashback").textContent =
 
 const categoryStats = {};
 
-data.forEach(function (row) {
+data.forEach(row => {
 
-  const category = row.PreferedOrderCat;
+  const category = String(row.PreferedOrderCat || "Unknown").trim();
 
   if (!categoryStats[category]) {
     categoryStats[category] = {
@@ -84,20 +82,15 @@ data.forEach(function (row) {
 
 });
 
-
-/* =========================================
-   5. CHART DATA
-========================================= */
-
 const labels = Object.keys(categoryStats);
 
-const churnedByCategory = labels.map(function (category) {
-  return categoryStats[category].churned;
-});
+const churnedByCategory = labels.map(
+  category => categoryStats[category].churned
+);
 
 
 /* =========================================
-   6. CHART COLORS
+   5. CHART COLORS
 ========================================= */
 
 const chartColors = [
@@ -111,22 +104,179 @@ const chartColors = [
 
 
 /* =========================================
-   7. CENTER TEXT PLUGIN
+   6. CHURN RATE TREND - BAR CHART
 ========================================= */
 
-const overallChurn = churnRate.toFixed(1);
+// Group customers by Tenure
+
+const tenureStats = {};
+
+data.forEach(row => {
+
+  const tenure = Number(row.Tenure);
+
+  if (row.Tenure === null ||
+      row.Tenure === undefined ||
+      row.Tenure === "" ||
+      !Number.isFinite(tenure)) {
+    return;
+  }
+
+  if (!tenureStats[tenure]) {
+    tenureStats[tenure] = {
+      total: 0,
+      churned: 0
+    };
+  }
+
+  tenureStats[tenure].total++;
+
+  if (isChurned(row)) {
+    tenureStats[tenure].churned++;
+  }
+
+});
+
+const tenureLabels = Object.keys(tenureStats)
+  .map(Number)
+  .sort((a, b) => a - b);
+
+const tenureChurnRates = tenureLabels.map(tenure => {
+
+  const stats = tenureStats[tenure];
+
+  return stats.total > 0
+    ? (stats.churned / stats.total) * 100
+    : 0;
+
+});
+
+const trendCanvas = document.getElementById("churnTrendChart");
+
+if (trendCanvas) {
+
+  new Chart(trendCanvas, {
+
+    type: "bar",
+
+    data: {
+
+      labels: tenureLabels,
+
+      datasets: [{
+
+        label: "Churn Rate (%)",
+
+        data: tenureChurnRates,
+
+        backgroundColor: "#22D3E6",
+
+        borderColor: "#22D3E6",
+
+        borderWidth: 1,
+
+        borderRadius: 6,
+
+        maxBarThickness: 35
+
+      }]
+
+    },
+
+    options: {
+
+      responsive: true,
+
+      maintainAspectRatio: false,
+
+      plugins: {
+
+        legend: {
+          labels: {
+            color: "#F1F5F9"
+          }
+        },
+
+        tooltip: {
+
+          callbacks: {
+
+            label: context =>
+              "Churn Rate: " + context.parsed.y.toFixed(1) + "%"
+
+          }
+
+        }
+
+      },
+
+      scales: {
+
+        x: {
+
+          title: {
+            display: true,
+            text: "Customer Tenure (Months)",
+            color: "#94A3B8"
+          },
+
+          ticks: {
+            color: "#94A3B8"
+          },
+
+          grid: {
+            display: false
+          }
+
+        },
+
+        y: {
+
+          beginAtZero: true,
+
+          max: 100,
+
+          title: {
+            display: true,
+            text: "Churn Rate (%)",
+            color: "#94A3B8"
+          },
+
+          ticks: {
+            color: "#94A3B8",
+            callback: value => value + "%"
+          },
+
+          grid: {
+            color: "#233653"
+          }
+
+        }
+
+      }
+
+    }
+
+  });
+
+}
+
+
+/* =========================================
+   7. CENTER TEXT PLUGIN
+========================================= */
 
 const centerTextPlugin = {
 
   id: "centerText",
 
-  afterDraw: function (chart) {
+  afterDraw(chart) {
 
-    const ctx = chart.ctx;
     const meta = chart.getDatasetMeta(0);
 
     if (!meta.data.length) return;
 
+    const ctx = chart.ctx;
     const x = meta.data[0].x;
     const y = meta.data[0].y;
 
@@ -137,7 +287,7 @@ const centerTextPlugin = {
 
     ctx.fillStyle = "#F1F5F9";
     ctx.font = "bold 28px Segoe UI";
-    ctx.fillText(overallChurn + "%", x, y - 8);
+    ctx.fillText(churnRate.toFixed(1) + "%", x, y - 8);
 
     ctx.fillStyle = "#94A3B8";
     ctx.font = "13px Segoe UI";
@@ -154,100 +304,86 @@ const centerTextPlugin = {
    8. DOUGHNUT CHART
 ========================================= */
 
-const ctx = document
-  .getElementById("churnChart")
-  .getContext("2d");
+const categoryCanvas = document.getElementById("churnChart");
 
-new Chart(ctx, {
+if (categoryCanvas) {
 
-  type: "doughnut",
+  new Chart(categoryCanvas, {
 
-  plugins: [centerTextPlugin],
+    type: "doughnut",
 
-  data: {
+    plugins: [centerTextPlugin],
 
-    labels: labels,
+    data: {
 
-    datasets: [{
+      labels: labels,
 
-      label: "Churned Customers",
+      datasets: [{
 
-      data: churnedByCategory,
+        label: "Churned Customers",
 
-      backgroundColor: chartColors,
+        data: churnedByCategory,
 
-      borderColor: "#101f38",
+        backgroundColor: chartColors,
 
-      borderWidth: 3,
+        borderColor: "#101f38",
 
-      hoverOffset: 10
+        borderWidth: 3,
 
-    }]
+        hoverOffset: 10
 
-  },
+      }]
 
-  options: {
+    },
 
-    responsive: true,
+    options: {
 
-    maintainAspectRatio: false,
+      responsive: true,
 
-    cutout: "62%",
+      maintainAspectRatio: false,
 
-    plugins: {
+      cutout: "62%",
 
-      legend: {
+      plugins: {
 
-        position: "right",
+        legend: {
 
-        labels: {
+          position: "right",
 
-          color: "#F1F5F9",
+          labels: {
 
-          padding: 18,
+            color: "#F1F5F9",
+            padding: 18,
+            usePointStyle: true,
+            pointStyle: "circle"
 
-          usePointStyle: true,
-
-          pointStyle: "circle",
-
-          font: {
-            size: 12
           }
 
-        }
+        },
 
-      },
+        tooltip: {
 
-      tooltip: {
+          backgroundColor: "#142541",
 
-        backgroundColor: "#142541",
+          titleColor: "#22D3E6",
 
-        titleColor: "#22D3E6",
+          bodyColor: "#F1F5F9",
 
-        bodyColor: "#F1F5F9",
+          callbacks: {
 
-        borderColor: "#233653",
+            afterLabel(context) {
 
-        borderWidth: 1,
+              const stats = categoryStats[context.label];
 
-        callbacks: {
+              const rate = stats.total > 0
+                ? (stats.churned / stats.total * 100).toFixed(1)
+                : "0.0";
 
-          afterLabel: function (context) {
+              return stats.churned + " of " +
+                stats.total + " customers churned (" +
+                rate + "%)";
 
-            const stats = categoryStats[context.label];
-
-            const rate = stats.total > 0
-              ? (stats.churned / stats.total * 100).toFixed(1)
-              : "0.0";
-
-            return (
-              stats.churned +
-              " of " +
-              stats.total +
-              " customers churned (" +
-              rate +
-              "%)"
-            );
+            }
 
           }
 
@@ -257,6 +393,6 @@ new Chart(ctx, {
 
     }
 
-  }
+  });
 
-});
+}

@@ -629,3 +629,111 @@ tbody tr:hover {
         transform: translateX(4%) translateY(-10px);
     }
 }
+
+/* =========================================
+   NEON ANIMATED BACKGROUND
+========================================= */
+
+.dashboard {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* Neon glow orbs */
+
+.dashboard::before {
+  content: "";
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  top: 10%;
+  right: -180px;
+
+  background: radial-gradient(
+    circle,
+    rgba(34, 211, 230, 0.16) 0%,
+    rgba(59, 130, 246, 0.08) 40%,
+    transparent 70%
+  );
+
+  filter: blur(35px);
+  animation: neonFloat 12s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Animated neon waves */
+
+.main-content::before {
+  content: "";
+  position: fixed;
+  width: 700px;
+  height: 350px;
+  bottom: -180px;
+  left: 25%;
+
+  background: radial-gradient(
+    ellipse,
+    rgba(34, 211, 230, 0.15),
+    rgba(59, 130, 246, 0.08) 45%,
+    transparent 72%
+  );
+
+  filter: blur(45px);
+  animation: waveGlow 9s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Floating animation */
+
+@keyframes neonFloat {
+  0% {
+    transform: translate(-40px, -30px);
+  }
+
+  100% {
+    transform: translate(50px, 70px);
+  }
+}
+
+@keyframes waveGlow {
+  0% {
+    transform: translateX(-100px) scale(0.9);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: translateX(100px) scale(1.2);
+    opacity: 1;
+  }
+}
+
+/* Neon card hover */
+
+.card,
+.kpi-card {
+  position: relative;
+  z-index: 1;
+  transition: border-color 0.4s, box-shadow 0.4s,
+              transform 0.4s;
+}
+
+.card:hover,
+.kpi-card:hover {
+  border-color: rgba(34, 211, 230, 0.55);
+
+  box-shadow:
+    0 0 12px rgba(34, 211, 230, 0.08),
+    0 0 28px rgba(34, 211, 230, 0.06);
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard::before,
+  .main-content::before {
+    animation: none;
+  }
+}
