@@ -12,7 +12,47 @@ function isChurned(row) {
   );
 }
 
+// Calculate KPI values from the actual dataset
 
+const totalCustomers = data.length;
+
+const churnedCustomers = data.filter(isChurned).length;
+
+const retainedCustomers = totalCustomers - churnedCustomers;
+
+const churnRate = totalCustomers > 0
+    ? (churnedCustomers / totalCustomers) * 100
+    : 0;
+
+const retentionRate = totalCustomers > 0
+    ? (retainedCustomers / totalCustomers) * 100
+    : 0;
+
+const cashbackValues = data
+    .map(row => Number(row.CashbackAmount))
+    .filter(value => Number.isFinite(value));
+
+const averageCashback = cashbackValues.length > 0
+    ? cashbackValues.reduce((sum, value) => sum + value, 0) / cashbackValues.length
+    : null;
+
+
+// Display KPI values on the dashboard
+
+document.getElementById("totalCustomers").textContent =
+    totalCustomers.toLocaleString();
+
+document.getElementById("churnRate").textContent =
+    churnRate.toFixed(1) + "%";
+
+document.getElementById("retentionRate").textContent =
+    retentionRate.toFixed(1) + "%";
+
+document.getElementById("averageCashback").textContent =
+    averageCashback !== null
+        ? averageCashback.toFixed(2)
+        : "N/A";
+        
 /* =========================================
    2. CATEGORY STATISTICS
 ========================================= */

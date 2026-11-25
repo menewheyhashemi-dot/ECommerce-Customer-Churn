@@ -78,7 +78,120 @@
 
 
       <!-- Dashboard Content -->
+      <!-- Dashboard Content -->
+
       <div class="content-grid">
+
+        <!-- KPI CARDS -->
+        <section class="kpi-grid">
+
+          <div class="kpi-card customers">
+            <div class="kpi-icon">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div>
+              <p>Total Customers</p>
+              <h3 id="totalCustomers">--</h3>
+            </div>
+          </div>
+
+          <div class="kpi-card churn">
+            <div class="kpi-icon">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <div>
+              <p>Churn Rate</p>
+              <h3 id="churnRate">--%</h3>
+            </div>
+          </div>
+
+          <div class="kpi-card retention">
+            <div class="kpi-icon">
+              <i class="fa-solid fa-user-check"></i>
+            </div>
+            <div>
+              <p>Retention Rate</p>
+              <h3 id="retentionRate">--%</h3>
+            </div>
+          </div>
+
+          <div class="kpi-card revenue">
+            <div class="kpi-icon">
+              <i class="fa-solid fa-wallet"></i>
+            </div>
+            <div>
+              <p>Average Cashback</p>
+              <h3 id="averageCashback">--</h3>
+            </div>
+          </div>
+
+        </section>
+
+
+        <!-- CHARTS -->
+        <section class="charts-grid">
+
+          <!-- Churn Trend -->
+          <div class="card chart-card">
+
+            <div class="section-title">
+              <i class="fa-solid fa-chart-line"></i>
+              <h2>Churn Rate Trend</h2>
+            </div>
+
+            <div class="chart-wrapper">
+              <canvas id="churnTrendChart"></canvas>
+            </div>
+
+          </div>
+
+
+          <!-- Doughnut Chart -->
+          <div class="card chart-card">
+
+            <div class="section-title">
+              <i class="fa-solid fa-chart-pie"></i>
+              <h2>Churn by Category</h2>
+            </div>
+
+            <div class="chart-wrapper">
+              <canvas id="churnChart"></canvas>
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- CUSTOMER TABLE -->
+        <section class="card table-card" id="customers">
+
+          <div class="section-header">
+
+            <div class="section-title">
+              <i class="fa-solid fa-users"></i>
+              <h2>Customer Data</h2>
+            </div>
+
+            <div class="table-search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+
+              <input
+                type="search"
+                id="searchBox"
+                placeholder="Search customers..."
+                aria-label="Search customers">
+            </div>
+
+          </div>
+
+          <p id="rowCount" class="row-count"></p>
+
+          <div id="tableContainer" class="table-container"></div>
+
+        </section>
+
+      </div>
 
         <!-- Chart Section -->
         <section class="card chart-card" id="analytics">
