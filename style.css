@@ -652,8 +652,8 @@ tbody tr:hover {
 
   background: radial-gradient(
     circle,
-    rgba(34, 211, 230, 0.16) 0%,
-    rgba(59, 130, 246, 0.08) 40%,
+    rgba(173, 175, 175, 0.16) 0%,
+    rgba(181, 201, 233, 0.08) 40%,
     transparent 70%
   );
 
@@ -675,8 +675,8 @@ tbody tr:hover {
 
   background: radial-gradient(
     ellipse,
-    rgba(34, 211, 230, 0.15),
-    rgba(59, 130, 246, 0.08) 45%,
+    rgba(255, 255, 255, 0.16),
+    rgba(255, 255, 255, 0.06) 45%,
     transparent 72%
   );
 
