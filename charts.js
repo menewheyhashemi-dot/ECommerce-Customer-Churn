@@ -12,7 +12,10 @@ function isChurned(row) {
   );
 }
 
-// Calculate KPI values from the actual dataset
+
+/* =========================================
+   2. KPI CALCULATIONS
+========================================= */
 
 const totalCustomers = data.length;
 
@@ -21,40 +24,43 @@ const churnedCustomers = data.filter(isChurned).length;
 const retainedCustomers = totalCustomers - churnedCustomers;
 
 const churnRate = totalCustomers > 0
-    ? (churnedCustomers / totalCustomers) * 100
-    : 0;
+  ? (churnedCustomers / totalCustomers) * 100
+  : 0;
 
 const retentionRate = totalCustomers > 0
-    ? (retainedCustomers / totalCustomers) * 100
-    : 0;
+  ? (retainedCustomers / totalCustomers) * 100
+  : 0;
 
 const cashbackValues = data
-    .map(row => Number(row.CashbackAmount))
-    .filter(value => Number.isFinite(value));
+  .map(row => Number(row.CashbackAmount))
+  .filter(value => Number.isFinite(value));
 
 const averageCashback = cashbackValues.length > 0
-    ? cashbackValues.reduce((sum, value) => sum + value, 0) / cashbackValues.length
-    : null;
+  ? cashbackValues.reduce((sum, value) => sum + value, 0) / cashbackValues.length
+  : null;
 
 
-// Display KPI values on the dashboard
+/* =========================================
+   3. DISPLAY KPI VALUES
+========================================= */
 
 document.getElementById("totalCustomers").textContent =
-    totalCustomers.toLocaleString();
+  totalCustomers.toLocaleString();
 
 document.getElementById("churnRate").textContent =
-    churnRate.toFixed(1) + "%";
+  churnRate.toFixed(1) + "%";
 
 document.getElementById("retentionRate").textContent =
-    retentionRate.toFixed(1) + "%";
+  retentionRate.toFixed(1) + "%";
 
 document.getElementById("averageCashback").textContent =
-    averageCashback !== null
-        ? averageCashback.toFixed(2)
-        : "N/A";
-        
+  averageCashback !== null
+    ? averageCashback.toFixed(2)
+    : "N/A";
+
+
 /* =========================================
-   2. CATEGORY STATISTICS
+   4. CATEGORY STATISTICS
 ========================================= */
 
 const categoryStats = {};
@@ -80,34 +86,18 @@ data.forEach(function (row) {
 
 
 /* =========================================
-   3. CHART DATA
+   5. CHART DATA
 ========================================= */
 
 const labels = Object.keys(categoryStats);
 
-const churnRates = labels.map(function (category) {
-
-  const stats = categoryStats[category];
-
-  return Math.round(
-    (stats.churned / stats.total) * 1000
-  ) / 10;
-
+const churnedByCategory = labels.map(function (category) {
+  return categoryStats[category].churned;
 });
 
 
-// Overall churn rate
-const totalCustomers = data.length;
-
-const totalChurned = data.filter(isChurned).length;
-
-const overallChurn = totalCustomers
-  ? ((totalChurned / totalCustomers) * 100).toFixed(1)
-  : "0.0";
-
-
 /* =========================================
-   4. CHART COLORS
+   6. CHART COLORS
 ========================================= */
 
 const chartColors = [
@@ -121,8 +111,10 @@ const chartColors = [
 
 
 /* =========================================
-   5. CENTER TEXT PLUGIN
+   7. CENTER TEXT PLUGIN
 ========================================= */
+
+const overallChurn = churnRate.toFixed(1);
 
 const centerTextPlugin = {
 
@@ -131,7 +123,6 @@ const centerTextPlugin = {
   afterDraw: function (chart) {
 
     const ctx = chart.ctx;
-
     const meta = chart.getDatasetMeta(0);
 
     if (!meta.data.length) return;
@@ -146,12 +137,10 @@ const centerTextPlugin = {
 
     ctx.fillStyle = "#F1F5F9";
     ctx.font = "bold 28px Segoe UI";
-
     ctx.fillText(overallChurn + "%", x, y - 8);
 
     ctx.fillStyle = "#94A3B8";
     ctx.font = "13px Segoe UI";
-
     ctx.fillText("Overall Churn", x, y + 20);
 
     ctx.restore();
@@ -162,7 +151,7 @@ const centerTextPlugin = {
 
 
 /* =========================================
-   6. DOUGHNUT CHART
+   8. DOUGHNUT CHART
 ========================================= */
 
 const ctx = document
@@ -181,9 +170,9 @@ new Chart(ctx, {
 
     datasets: [{
 
-      label: "Churn Rate (%)",
+      label: "Churned Customers",
 
-      data: churnRates,
+      data: churnedByCategory,
 
       backgroundColor: chartColors,
 
@@ -247,11 +236,17 @@ new Chart(ctx, {
 
             const stats = categoryStats[context.label];
 
+            const rate = stats.total > 0
+              ? (stats.churned / stats.total * 100).toFixed(1)
+              : "0.0";
+
             return (
               stats.churned +
               " of " +
               stats.total +
-              " customers churned"
+              " customers churned (" +
+              rate +
+              "%)"
             );
 
           }
